@@ -13,6 +13,7 @@ const typeDefs = `
     username: String!
     email: String!
     savedBooks: [Book]
+    friends: [User]
     bookCount: Int
   }
 
@@ -30,6 +31,7 @@ const typeDefs = `
     login(email: String!, password: String!): AuthPayload
     saveBook(bookInput: BookInput!): User
     deleteBook(bookId: String!): User
+    addFriend(friend_id: String!): User
   }
 
   input BookInput {

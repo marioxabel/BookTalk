@@ -11,6 +11,7 @@ export interface IUser extends Document {
   email: string;
   password: string;
   savedBooks: IBook[];
+  friends: IUser[];
   isCorrectPassword(password: string): Promise<boolean>;
   bookCount: number;
 }
@@ -34,6 +35,12 @@ const userSchema = new Schema<IUser>(
     },
     // set savedBooks to be an array of data that adheres to the bookSchema
     savedBooks: [bookSchema],
+    friends: [
+      { 
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+      }
+    ]
   },
   // set this to use virtual below
   {
