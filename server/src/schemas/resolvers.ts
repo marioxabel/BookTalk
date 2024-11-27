@@ -1,7 +1,6 @@
 import { IResolvers } from '@graphql-tools/utils';
-import User, { IUser } from '../models/User.js';  // Importando el modelo User
-import { IBook } from '../models/Book';
-// import { authenticateToken } from '../services/auth.js';
+import User, { IUser } from '../models/User.js'; // Importar el modelo User
+import { IBook } from '../models/Book.js';
 import { AuthenticationError } from '../services/auth.js';
 import { signToken } from '../services/auth.js';
 
@@ -23,7 +22,7 @@ const resolvers: IResolvers = {
     },
     Mutation: {
         createUser: async (
-            _: any,
+            _: unknown,
             { username, email, password }: { username: string; email: string; password: string }
         ): Promise<{ token: string; user: IUser }> => {
             try {
@@ -36,70 +35,85 @@ const resolvers: IResolvers = {
             }
         },
         login: async (
-            _: any,
+            _: unknown,
             { email, password }: { email: string; password: string }
         ): Promise<{ token: string; user: IUser }> => {
-            // Busca al usuario en la base de datos
             const user = await User.findOne({ email });
             if (!user) {
                 throw new AuthenticationError('No user found with this email address');
             }
 
-            // Verifica la contraseña
             const correctPw = await user.isCorrectPassword(password);
             if (!correctPw) {
                 throw new AuthenticationError('Incorrect password');
             }
 
-            // Genera el token
-            const token = signToken(user.username, user.email, user._id); // Asegúrate de que signToken está definido
-
-            return { token, user }; // Asegúrate de devolver el token aquí
+            const token = signToken(user.username, user.email, user._id);
+            return { token, user };
         },
 
         saveBook: async (
-            _: any,
+            _: unknown,
             { bookInput }: { bookInput: IBook },
-            { user }: { user: IUser, req: any }
+            { user }: { user: IUser }
         ): Promise<IUser> => {
-            // Revisar si el usuario está autenticado
-            console.log("User in saveBook mutation:", user);
             if (!user) throw new AuthenticationError('You must be logged in');
 
-            user.savedBooks = user.savedBooks || []; // Garantiza que sea un array
-
-            // Verificar si el libro ya está guardado
-            const existingBook = user.savedBooks.some((book) => book.bookId === bookInput.bookId);
+            const existingBook = user.savedBooks?.some((book) => book.bookId === bookInput.bookId);
             if (existingBook) {
                 throw new Error("Book is already saved.");
             }
 
-            // Actualiza al usuario con el nuevo libro guardado
-            const updatedUser = await User.findByIdAndUpdate(user._id,
+            const updatedUser = await User.findByIdAndUpdate(
+                user._id,
                 { $addToSet: { savedBooks: bookInput } },
                 { new: true, runValidators: true }
             ).populate('savedBooks');
 
             if (!updatedUser) throw new Error('User not found');
 
-
-
             return updatedUser;
         },
 
         deleteBook: async (
-            _: any,
+            _: unknown,
             { bookId }: { bookId: string },
-            { user }: { user: IUser, req: any }
+            { user }: { user: IUser }
         ): Promise<IUser> => {
             if (!user) throw new AuthenticationError('You must be logged in');
 
-            // Elimina el libro cuyo 'bookId' coincide con el proporcionado
             const updatedUser = await User.findByIdAndUpdate(
                 user._id,
-                { $pull: { savedBooks: { bookId } } },  // Aquí usamos bookId en lugar de bookInput
+                { $pull: { savedBooks: { bookId } } },
                 { new: true }
             ).populate('savedBooks');
+
+            if (!updatedUser) throw new Error('User not found');
+
+            return updatedUser;
+        },
+
+        addFriend: async (
+            _: unknown,
+            { friend_id }: { friend_id: string },
+            { user }: { user: IUser }
+        ): Promise<IUser | null> => {
+            if (!user) throw new AuthenticationError('You must be logged in');
+
+            const alreadyFriend = await User.findOne({
+                _id: user._id,
+                friends: friend_id,
+            });
+
+            if (alreadyFriend) {
+                throw new Error('Friend already added');
+            }
+
+            const updatedUser = await User.findByIdAndUpdate(
+                user._id,
+                { $push: { friends: friend_id } },
+                { new: true }
+            ).populate('friends');
 
             if (!updatedUser) throw new Error('User not found');
 

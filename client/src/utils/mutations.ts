@@ -62,3 +62,17 @@ export const DELETE_BOOK = gql`
 
 // Agregar la mutation de add reviews
 
+export const ADD_FRIEND = gql`
+  mutation addFriend($friend_id: String!) {
+      addFriend(friend_id: $friend_id) {
+        id    
+        username
+        email
+        friends {
+            id
+            username
+            email
+        }
+      }
+  }
+`
