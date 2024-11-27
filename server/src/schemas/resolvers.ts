@@ -1,8 +1,10 @@
 import { IResolvers } from '@graphql-tools/utils';
-import User, { IUser } from '../models/User.js'; // Importar el modelo User
-import { IBook } from '../models/Book.js';
+import User, { IUser } from '../models/User.js';
+import Book, { IBook } from '../models/Book.js';
 import { AuthenticationError } from '../services/auth.js';
 import { signToken } from '../services/auth.js';
+
+
 
 const resolvers: IResolvers = {
     Query: {
@@ -15,7 +17,7 @@ const resolvers: IResolvers = {
                 }
                 return foundUser;
             } catch (err) {
-                console.error('Error fetching user:', err);
+                console.error('Error fetching user in me query:', err);
                 throw new Error('Error fetching user');
             }
         },
@@ -59,16 +61,27 @@ const resolvers: IResolvers = {
         ): Promise<IUser> => {
             if (!user) throw new AuthenticationError('You must be logged in');
 
-            const existingBook = user.savedBooks?.some((book) => book.bookId === bookInput.bookId);
-            if (existingBook) {
-                throw new Error("Book is already saved.");
+            const existingUser = await User.findById(user._id);
+            if (!existingUser) throw new AuthenticationError('User not found');
+
+            let existingBook = await Book.findOne({bookId: bookInput.bookId})
+            if (!existingBook) {
+                existingBook = await Book.create(bookInput)
             }
+
+            // const existingBook = existingUser.savedBooks.some((book) => Book.bookId === bookInput.bookId);
+            // if (existingBook) {
+            //     throw new Error("Book is already saved.");
+            // }
 
             const updatedUser = await User.findByIdAndUpdate(
                 user._id,
-                { $addToSet: { savedBooks: bookInput } },
+                { $addToSet: { savedBooks: existingBook._id } },
                 { new: true, runValidators: true }
             ).populate('savedBooks');
+
+            await existingBook.updateOne({ $addToSet: {users: user._id}})
+            await existingBook.save()
 
             if (!updatedUser) throw new Error('User not found');
 
@@ -119,6 +132,41 @@ const resolvers: IResolvers = {
 
             return updatedUser;
         },
+
+        addReview: async (
+            _: unknown,
+            { bookId, reviewInput }: { bookId: string; reviewInput: { review: string } },
+            { user }: { user: IUser }
+          ): Promise<IBook> => {
+            if (!user) throw new AuthenticationError('You must be logged in');
+          
+            try {
+              // Find the book by bookId in the user's savedBooks
+              console.log(user._id)
+              const book = await Book.findOne({ 
+                bookId, 
+                users: { $in: user._id}, 
+                'reviews.userId': { $nin: user._id} 
+                });
+              console.log(book)
+              if (!book) throw new Error('Book not found in user\'s savedBooks');
+                
+              
+              // Add the review to the book's reviews array
+              book.reviews.push({ review: reviewInput.review, userId: user._id });
+          
+              // Save the updated user document
+              await book.save();
+          
+              return book; // Return the updated book
+            } catch (err) {
+              console.error(`Error adding review for bookId ${bookId}:`, err);
+              throw new Error('Error adding review');
+            }
+          },
+          
+          
+          
     },
 };
 

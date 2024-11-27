@@ -76,3 +76,16 @@ export const ADD_FRIEND = gql`
       }
   }
 `
+
+export const ADD_REVIEW = gql`
+  mutation AddReview($bookId: String!, $reviewInput: ReviewInput!) {
+    addReview(bookId: $bookId, reviewInput: $reviewInput) {
+      bookId
+      title
+      reviews {
+        userId
+        review
+      }
+    }
+  }
+`

@@ -1,16 +1,38 @@
-import { Schema, type Document } from 'mongoose';
+import { Schema, model, type Document } from 'mongoose';
 
-export interface IBook extends Document {
-  bookId: string;
-  title: string;
-  authors: string[];
-  description: string;
-  image: string;
-  link: string;
+// Define the interface for reviews
+export interface IReview {
+  review: string;
+  userId: Schema.Types.ObjectId; // Reference to the User model
 }
 
-// This is a subdocument schema, it won't become its own model but we'll use it as the schema for the User's `savedBooks` array in User.js
-const bookSchema = new Schema<IBook>({
+// Define the interface for books
+export interface IBook extends Document {
+  bookId: string; // Book identifier
+  title: string; // Title of the book
+  authors: string[]; // List of authors
+  description: string; // Book description
+  image: string; // URL to the book image
+  link: string; // URL to the book's reference link
+  reviews: IReview[]; // Array of reviews
+  users: Schema.Types.ObjectId[]
+}
+
+// Define the review schema
+const reviewSchema = new Schema<IReview>({
+  review: {
+    type: String,
+    required: true,
+  },
+  userId: {
+    type: Schema.Types.ObjectId, // Reference to the User model
+    ref: 'User', // Refers to the User collection
+    required: true,
+  },
+});
+
+// Define the book schema
+export const bookSchema = new Schema<IBook>({ // Add named export for bookSchema
   authors: [
     {
       type: String,
@@ -20,10 +42,10 @@ const bookSchema = new Schema<IBook>({
     type: String,
     required: true,
   },
-  // saved book id from GoogleBooks
   bookId: {
     type: String,
     required: true,
+    unique: true, // Ensures no duplicate book IDs
   },
   image: {
     type: String,
@@ -35,6 +57,16 @@ const bookSchema = new Schema<IBook>({
     type: String,
     required: true,
   },
+  reviews: [reviewSchema], // Embed the reviews as an array
+  users: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+    },
+  ]
 });
 
-export default bookSchema;
+// Create and export the Book model
+const Book = model<IBook>('Book', bookSchema);
+
+export default Book;

@@ -6,6 +6,12 @@ const typeDefs = `
     description: String!
     image: String
     link: String
+    reviews: [Review] # Add reviews to the Book type
+  }
+
+  type Review {
+    userId: ID! # Reference to the user who wrote the review
+    review: String! # The review text
   }
 
   type User {
@@ -32,6 +38,7 @@ const typeDefs = `
     saveBook(bookInput: BookInput!): User
     deleteBook(bookId: String!): User
     addFriend(friend_id: String!): User
+    addReview(bookId: String!, reviewInput: ReviewInput!): Book # Add the addReview mutation
   }
 
   input BookInput {
@@ -41,6 +48,10 @@ const typeDefs = `
     description: String!
     image: String
     link: String
+  }
+
+  input ReviewInput {
+    review: String! # The review text
   }
 `;
 
