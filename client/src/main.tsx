@@ -6,6 +6,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import App from './App';
 import SearchBooks from './pages/Search';
 import SavedBooks from './pages/Mybooks';
+import SignUp from './components/signup';
 //import { ApolloClient, InMemoryCache } from '@apollo/client'; // Importa Apollo Client
 
 // Configura el cliente Apollo
@@ -29,6 +30,10 @@ const router = createBrowserRouter([
       {
         path: '/saved',
         element: <SavedBooks />
+      },
+      {
+        path: '/signup',
+        element: <SignUp />
       }
     ]
   }
