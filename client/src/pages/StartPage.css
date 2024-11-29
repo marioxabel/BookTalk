@@ -1,0 +1,21 @@
+.startpage {
+    display: flex;
+    justify-content: center; /* Center buttons horizontally */
+    align-items: center; /* Center buttons vertically */
+    flex-direction: column; /* Stack buttons vertically */
+    height: 100vh; /* Full viewport height */
+    position: relative; /* Set relative positioning for title placement */
+}
+
+.startpage h1 {
+    position: absolute; /* Position title independently */
+    top: 0; /* Align to the top */
+    right: 0; /* Align to the right */
+    margin: 20px; /* Add spacing from the edges */
+    text-align: right; /* Ensure text alignment is right */
+}
+
+.startpage button {
+    margin: 10px; /* Add spacing between buttons */
+    width: 40%;
+}
