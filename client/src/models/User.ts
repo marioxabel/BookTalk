@@ -5,6 +5,7 @@ export interface User {
   email: string | null;
   password: string | null;
   savedBooks: Book[];
+  friends: any[]
 }
 
   // Agregar propiedad de add friends
