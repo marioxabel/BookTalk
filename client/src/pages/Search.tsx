@@ -5,6 +5,7 @@ import Auth from '../utils/auth';
 import { SAVE_BOOK } from '../utils/mutations';
 import type { Book } from '../models/Book';
 import type { GoogleAPIBook } from '../models/GoogleAPIBook';
+import {get_books} from '../utils/googleapi';
 
 const SearchBooks = () => {
   const [searchedBooks, setSearchedBooks] = useState<Book[]>([]);
@@ -19,12 +20,7 @@ const SearchBooks = () => {
     
     // Aquí haces la búsqueda con Google Books API
     // Asegúrate de usar el fetch correspondiente a tu API.
-    const response = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${searchInput}`);
-    if (!response.ok) {
-  console.error('Error fetching data from Google Books API:', response.statusText);
-  return;
-}
-const { items } = await response.json();
+    const { items } = await get_books (searchInput);
 
     const bookData = items.map((book: GoogleAPIBook) => ({
       bookId: book.id,

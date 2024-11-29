@@ -7,6 +7,8 @@ import App from './App';
 import SearchBooks from './pages/Search';
 import SavedBooks from './pages/Mybooks';
 import SignUp from './components/signup';
+import Reviews from './pages/Reviews';
+import ReviewPage from './pages/Reviews';
 //import { ApolloClient, InMemoryCache } from '@apollo/client'; // Importa Apollo Client
 
 // Configura el cliente Apollo
@@ -34,6 +36,10 @@ const router = createBrowserRouter([
       {
         path: '/signup',
         element: <SignUp />
+      },
+      {
+        path: '/books/:bookId/reviews',
+        element: <ReviewPage />
       }
     ]
   }
