@@ -7,23 +7,14 @@ import App from './App';
 import SearchBooks from './pages/Search';
 import SavedBooks from './pages/Mybooks';
 import StartPage from './pages/StartPage';
-import Reviews from './pages/Reviews';
 import ReviewPage from './pages/Reviews';
-//import { ApolloClient, InMemoryCache } from '@apollo/client'; // Importa Apollo Client
-
-// Configura el cliente Apollo
-/*
-export const client = new ApolloClient({
-  uri: 'http://localhost:3001/graphql', // Asegúrate de que este URI apunte a tu servidor GraphQL
-  cache: new InMemoryCache(),
-});
-*/
+import ErrorPage from './pages/ErrorPage'
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <App />,
-    errorElement: <h1 className='display-2'>Wrong page!</h1>,
+    errorElement:  <ErrorPage />,
     children: [
       {
         index: true,
@@ -41,6 +32,10 @@ const router = createBrowserRouter([
         path: '/books/:bookId/reviews',
         element: <ReviewPage />
       }
+      //  {
+      //   path: '/reviews/:bookId', // Nueva ruta con parámetro
+      //   element: <ReviewsPage />
+      // }
     ]
   }
 ]);
