@@ -7,15 +7,7 @@ import App from './App';
 import SearchBooks from './pages/Search';
 import SavedBooks from './pages/Mybooks';
 import StartPage from './pages/StartPage';
-//import { ApolloClient, InMemoryCache } from '@apollo/client'; // Importa Apollo Client
 
-// Configura el cliente Apollo
-/*
-export const client = new ApolloClient({
-  uri: 'http://localhost:3001/graphql', // Asegúrate de que este URI apunte a tu servidor GraphQL
-  cache: new InMemoryCache(),
-});
-*/
 
 const router = createBrowserRouter([
   {
@@ -35,6 +27,10 @@ const router = createBrowserRouter([
         path: '/searchbooks',
         element: <SearchBooks />
       }
+      //  {
+      //   path: '/reviews/:bookId', // Nueva ruta con parámetro
+      //   element: <ReviewsPage />
+      // }
     ]
   }
 ]);
