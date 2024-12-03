@@ -1,0 +1,38 @@
+
+.card-text {
+    font-size: 1rem;
+    color: #555;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 5; 
+    -webkit-box-orient: vertical;
+    line-clamp: 5;
+    min-height: 100px; 
+    max-height: 100px;
+  }
+  
+  /* Adjust book image height */
+  .card-img-top {
+    height: 500px; /* Elongate the book images */
+    object-fit: cover; /* Maintain aspect ratio and fill space */
+    border-radius: 10px 10px 0 0;
+  }
+  
+  /* Ensure all book cards are uniform */
+  .book-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%; /* Ensure cards fill the same height */
+    border: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .book-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  }
+  

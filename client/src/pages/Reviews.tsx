@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react';
+// import { useState, useEffect } from 'react';
 import { Container, Col, Row, Card } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
-import type { Review } from '../models/Book';
-import type { Book } from '../models/Book';
+// import type { Review } from '../models/Book';
+// import type { Book } from '../models/Book';
 import { GET_BOOK } from '../utils/queries';
 
 
