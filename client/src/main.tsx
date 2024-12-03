@@ -7,13 +7,13 @@ import App from './App';
 import SearchBooks from './pages/Search';
 import SavedBooks from './pages/Mybooks';
 import StartPage from './pages/StartPage';
-
+import ErrorPage from './pages/ErrorPage'
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <App />,
-    errorElement: <h1 className='display-2'>Wrong page!</h1>,
+    errorElement:  <ErrorPage />,
     children: [
       {
         index: true,
