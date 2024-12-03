@@ -7,6 +7,7 @@ import App from './App';
 import SearchBooks from './pages/Search';
 import SavedBooks from './pages/Mybooks';
 import StartPage from './pages/StartPage';
+import ReviewPage from './pages/Reviews';
 import ErrorPage from './pages/ErrorPage'
 
 const router = createBrowserRouter([
@@ -26,6 +27,10 @@ const router = createBrowserRouter([
       {
         path: '/searchbooks',
         element: <SearchBooks />
+      },
+      {
+        path: '/books/:bookId/reviews',
+        element: <ReviewPage />
       }
       //  {
       //   path: '/reviews/:bookId', // Nueva ruta con parámetro

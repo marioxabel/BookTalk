@@ -3,6 +3,7 @@ import { Schema, model, type Document } from 'mongoose';
 // Define the interface for reviews
 export interface IReview {
   review: string;
+  rating: number;
   userId: Schema.Types.ObjectId; // Reference to the User model
 }
 
@@ -22,6 +23,10 @@ export interface IBook extends Document {
 const reviewSchema = new Schema<IReview>({
   review: {
     type: String,
+    required: true,
+  },
+  rating: {
+    type: Number,
     required: true,
   },
   userId: {
