@@ -7,6 +7,7 @@ import type { User } from '../models/User';
 import { GET_ME } from '../utils/queries';
 import type { Book } from '../models/Book';
 import type { GoogleAPIBook } from '../models/GoogleAPIBook';
+import './Mybooks.css'
 // import { useNavigate } from 'react-router-dom';
 // const navigate = useNavigate();
 
@@ -73,30 +74,35 @@ const SearchBooks = () => {
 
   return (
     <>
-      <div className="text-light bg-dark p-5">
-        <Container>
-          <h1>Hi {userData?.username}, what book are you looking for today?</h1>
-          <Form onSubmit={handleFormSubmit}>
-            <Row>
-              <Col xs={12} md={8}>
-                <Form.Control
-                  name='searchInput'
-                  value={searchInput}
-                  onChange={(e) => setSearchInput(e.target.value)}
-                  type='text'
-                  size='lg'
-                  placeholder='Type the name of the book'
-                />
-              </Col>
-              <Col xs={12} md={4}>
-                <Button type='submit' variant='success' size='lg'>
-                  Search
-                </Button>
-              </Col>
-            </Row>
-          </Form>
-        </Container>
+        <div className="Search_bar">
+        <h1>Hi {userData?.username}, what book are you looking for today?</h1>
+        <Form onSubmit={handleFormSubmit}>
+          <Row >
+            <Col xs={12} md={8}>
+              <Form.Control
+                name="searchInput"
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
+                type="text"
+                size="lg"
+                placeholder="Type the name of the book"
+                className="Search_input"
+              />
+            </Col>
+            <Col xs={12} md={4}>
+              <Button
+                type="submit"
+                className="Click_button"
+                size="lg"
+              >
+                Search
+              </Button>
+            </Col>
+          </Row>
+        </Form>
       </div>
+
+
 
       <Container>
         {showAlert && (
@@ -118,7 +124,7 @@ const SearchBooks = () => {
         <Row>
           {searchedBooks.map((book) => (
             <Col md="4" key={book.bookId}>
-              <Card border='dark'>
+              <Card >
                 {book.image && (
                   <Card.Img
                     src={book.image}
@@ -134,7 +140,7 @@ const SearchBooks = () => {
     <Row>
       <Col xs={6}>
         <Button
-          className='btn-block btn-info'
+          className='Click_button'
           onClick={() => handleSaveBook(book.bookId)}
           disabled={isBookSaved(book.bookId)}
         >
