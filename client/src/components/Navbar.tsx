@@ -45,20 +45,20 @@ const AppNavbar = () => {
               <Navbar.Collapse id="navbar">
                 <Nav className="ml-auto">
                   <Nav.Link as={Link} to="/" className="nav-item">
-                    Search
+                    SEARCH
                   </Nav.Link>
                   <Nav.Link as={Link} to="/myBooks" className="nav-item">
-                    My Books
+                    MY BOOKS
                   </Nav.Link>
                   <Nav.Link as={Link} to="/" className="nav-item">
-                    Reviews
+                    REVIEWS
                   </Nav.Link>
                   <Nav.Link as={Link} to="/" className="nav-item">
-                    My Profile
+                    PROFILE
                   </Nav.Link>
                   {isLoggedIn ? (
                     <Nav.Link onClick={handleLogout} className="nav-item">
-                      Logout
+                      LOGOUT
                     </Nav.Link>
                   ) : (
                     <Nav.Link onClick={() => setShowModal(true)} className="nav-item">
