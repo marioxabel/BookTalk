@@ -24,6 +24,8 @@ class AuthService {
       const decoded = jwtDecode<JwtPayload>(token);
       return decoded?.exp ? decoded.exp < Date.now() / 1000 : false;
     } catch (err) {
+      console.log(err);
+      
       return false;
     }
   }
