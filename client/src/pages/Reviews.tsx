@@ -20,43 +20,10 @@ const ReviewPage = () => {
     if (loading) return <p>Loading ...</p>;
     if (error) return <p>Error: {error.message}</p>;
 
-    const { book } = data;
+    const book = data?.book || {};
 
-    // const [book, setBook] = useState<Book | null>(null);
-    // const [reviews, setReviews] = useState<Review[]>([]);
 
-    // useEffect(() => {
-    //     // Fetch the book details based on bookId
-    //     const fetchBook = async () => {
-    //         try {
-    //             const response = await fetch(`/api/books/${bookId}`);
-    //             if (!response.ok) {
-    //                 throw new Error('Failed to fetch book details');
-    //             }
-    //             const data: Book = await response.json();
-    //             setBook(data);
-    //         } catch (error) {
-    //             console.error('Error fetching book details:', error);
-    //         }
-    //     };
-
-    //     // Fetch the reviews for the book
-    //     const fetchReviews = async () => {
-    //         try {
-    //             const response = await fetch(`/api/books/${bookId}/reviews`);
-    //             if (!response.ok) {
-    //                 throw new Error('Failed to fetch reviews');
-    //             }
-    //             const data: Review[] = await response.json();
-    //             setReviews(data);
-    //         } catch (error) {
-    //             console.error('Error fetching reviews:', error);
-    //         }
-    //     };
-
-    //     fetchBook();
-    //     fetchReviews();
-    // }, [bookId]);
+    
 
     return (
         <>
