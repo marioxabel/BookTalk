@@ -33,4 +33,23 @@ export const GET_BOOKS = gql`
   }
 `;
 
+export const GET_BOOK = gql`
+query Book($bookId: String!) {
+  book(bookId: $bookId) {
+    bookId
+    title
+    authors
+    description
+    image
+    link
+    reviews {
+      review
+      userId {
+        username
+      }
+    }
+  }
+}
+`;
+
 // Agregar query de add reviews

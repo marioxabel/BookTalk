@@ -1,6 +1,7 @@
 import { IResolvers } from '@graphql-tools/utils';
 import User, { IUser } from '../models/User.js';
 import Book, { IBook } from '../models/Book.js';
+// import Review from '../models/Book.js';
 import { AuthenticationError } from '../services/auth.js';
 import { signToken } from '../services/auth.js';
 
@@ -20,6 +21,11 @@ const resolvers: IResolvers = {
                 console.error('Error fetching user in me query:', err);
                 throw new Error('Error fetching user');
             }
+        },
+        book: async(_: any, { bookId }: { bookId: string}) => {
+            const currentBook = await Book.findOne({bookId}).populate("reviews.userId");
+            console.log(currentBook)
+            return currentBook
         },
     },
     Mutation: {
@@ -140,46 +146,42 @@ const resolvers: IResolvers = {
 
         addReview: async (
             _: unknown,
-            { bookId, reviewInput }: { bookId: string; reviewInput: { review: string } },
+            { bookId, reviewInput }: { bookId: string; reviewInput: { review: string, rating: number } },
             { user }: { user: IUser }
         ): Promise<IBook> => {
             if (!user) throw new AuthenticationError('You must be logged in');
 
             try {
-                console.log(`User ID: ${user._id}, Book ID: ${bookId}`); // Debug User and Book IDs
-
+                // Find the book by bookId in the user's savedBooks
+                console.log(user._id)
                 const book = await Book.findOne({
                     bookId,
                     users: { $in: user._id },
+                    'reviews.userId': { $nin: user._id }
                 });
+                console.log(book)
+                if (!book) throw new Error('Book not found in user\'s savedBooks');
 
-                if (!book) {
-                    console.error(`Book with ID ${bookId} not found for user ${user._id}`);
-                    throw new Error(`Book not found in the user's savedBooks.`);
-                }
 
-                console.log('Found book:', book); // Debug the found book
+                // Add the review to the book's reviews array
+                book.reviews.push({ review: reviewInput.review, rating: reviewInput.rating, userId: user._id });
 
-                // Add the review
-                book.reviews.push({
-                    review: reviewInput.review,
-                    userId: user._id,
-                });
+                // Save the updated user document
+                await book.save();
 
-                // Save the book document
-                const updatedBook = await book.save();
-                console.log('Updated book with reviews:', updatedBook.reviews); // Debug updated reviews
-
-                return updatedBook; // Return the updated book
+                return book; // Return the updated book
             } catch (err) {
-                console.error(`Error in addReview resolver:`, err);
+                console.error(`Error adding review for bookId ${bookId}:`, err);
                 throw new Error('Error adding review');
             }
         },
 
 
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> cc7708a6035d9764e842690688a727c94099280c
     },
 };
 

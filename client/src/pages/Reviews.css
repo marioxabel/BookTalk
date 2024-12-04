@@ -1,0 +1,82 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+}
+
+  /* Header Section */
+.text-light.bg-dark {
+    background-color: #343a40;
+    color: white;
+    padding: 50px 0;
+    text-align: center;
+}
+
+.text-light.bg-dark h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+
+.text-light.bg-dark p {
+    font-size: 1.2rem;
+    font-style: italic;
+}
+
+  /* Container Styles */
+.mt-5 {
+    margin-top: 3rem !important;
+}
+
+  /* Card Styles */
+.card {
+    border-radius: 10px;
+    transition: transform 0.2s ease-in-out;
+}
+
+.card:hover {
+    transform: scale(1.05);
+}
+
+.card-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
+}
+
+.card-subtitle {
+    text-align: center;
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+}
+
+.card-text {
+    text-align: justify;
+    font-size: 1rem;
+}
+
+  /* Review Stars */
+.text-warning span {
+    font-size: 1.5rem;
+}
+
+  /* Responsive Adjustments */
+@media (max-width: 768px) {
+    .text-light.bg-dark h1 {
+        font-size: 2rem;
+    }
+
+    .text-light.bg-dark p {
+        font-size: 1rem;
+    }
+
+    .card-title {
+        font-size: 1.2rem;
+    }
+
+    .card-subtitle span {
+        font-size: 1.2rem;
+    }
+
+    .card-text {
+        font-size: 0.9rem;
+    }
+}

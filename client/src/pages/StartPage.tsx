@@ -16,11 +16,11 @@ const StartPage = () => {
       if (isLoggedIn) {
         navigate("/searchbooks")
       }
-    }, []);
+    }, [isLoggedIn, navigate]);
   
     return (
         <div className="startpage">
-          <h1>BookTalk</h1>
+          <h1>Hi there! ready to read some books?</h1>
           
           {/* Login Button */}
           <button 

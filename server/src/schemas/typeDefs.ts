@@ -10,7 +10,8 @@ const typeDefs = `
   }
 
   type Review {
-    userId: ID! # Reference to the user who wrote the review
+    userId: User! # Reference to the user who wrote the review
+    rating: Int!
     review: String! # The review text
   }
 
@@ -30,6 +31,7 @@ const typeDefs = `
 
   type Query {
     me: User
+    book(bookId: String!): Book
   }
 
   type Mutation {
@@ -52,6 +54,7 @@ const typeDefs = `
 
   input ReviewInput {
     review: String! # The review text
+    rating: Int!
   }
 `;
 

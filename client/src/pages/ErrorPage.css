@@ -1,0 +1,40 @@
+/* Global styles */
+body {
+    font-family: "Georgia", serif;
+    color: #333;
+  }
+  
+  /* Error Page styles */
+  .error-page {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    text-align: center;
+  }
+  
+  .error-page h1 {
+    font-family: "Cursive", sans-serif;
+    font-size: 4rem;
+    color: #a97c50;
+  }
+  
+  .error-page p {
+    font-size: 1.5rem;
+    color: #333;
+  }
+  
+  .btn-custom {
+    background-color: #a97c50;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+  }
+  
+  .btn-custom:hover {
+    background-color: #8b5e3c;
+  }
+
