@@ -10,6 +10,7 @@
   "scripts": {
     "start": "cd server && npm run start",
     "start:dev": "concurrently \"cd server && npm run watch\" \"cd client && npm run dev\"",
+    "server": "cd server && npm run watch",
     "install": "cd server && npm i && cd ../client && npm i",
     "build": "cd server && npm run build && cd ../client && npm run build",
     "render-build": "npm install && npm run build",

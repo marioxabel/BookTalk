@@ -159,7 +159,7 @@ const resolvers: IResolvers = {
                     users: { $in: user._id },
                     'reviews.userId': { $nin: user._id }
                 });
-                console.log(book)
+                
                 if (!book) throw new Error('Book not found in user\'s savedBooks');
 
 
@@ -168,8 +168,8 @@ const resolvers: IResolvers = {
 
                 // Save the updated user document
                 await book.save();
-
-                return book; // Return the updated book
+                console.log(book)
+                return book.populate("reviews.userId");  // Return the updated book
             } catch (err) {
                 console.error(`Error adding review for bookId ${bookId}:`, err);
                 throw new Error('Error adding review');

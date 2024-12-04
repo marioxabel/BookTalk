@@ -1,65 +1,99 @@
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+/* Container for the books */
+.main-content {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 columns */
+  gap: 1rem; /* Space between items */
+  padding: 1rem;
+  margin-top: 2rem;
+}
+
+/* Individual book card */
+.book-card {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-.modal-content {
-  background: white;
-  padding: 2rem;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 300px; /* Reduced height of the card */
+  border: none;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
-  max-width: 500px;
-  width: 100%;
-  text-align: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  background-color: #fff;
+  max-width: 250px; /* Fixed width for uniformity */
+  margin: 0 auto; /* Centering the card */
+  padding: 0.5rem; /* Reduced padding inside the card */
 }
 
-.modal-content textarea {
-  width: 100%;
-  height: 100px;
-  margin: 1rem 0;
-  padding: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+/* Hover effect for the book card */
+.book-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
-.rating-input {
-  margin: 1rem 0;
+/* Book image styling */
+.book-card img {
+  height: 300px; /* Further reduce the image height */
+  object-fit: cover; /* Maintain aspect ratio and fill space */
+  border-radius: 8px 8px 0 0;
+  margin-bottom: 0.5rem; /* Add some space between image and description */
 }
 
-.rating-input label {
-  margin-right: 0.5rem;
-  font-size: 1rem;
+/* Book description text */
+.card-text {
+  font-size: 0.75rem; /* Smaller text size */
   color: #555;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* Limit the text to 3 lines */
+  -webkit-box-orient: vertical;
+  line-clamp: 3;
+  min-height: 40px; /* Smaller height for description */
+  max-height: 40px; /* Restrict height to prevent overflow */
+  padding: 0.25rem; /* Less padding for compactness */
 }
 
-.rating-input select {
+/* Book details */
+.book-details {
+  margin-top: 0.3rem; /* Reduced space between text and buttons */
+  padding: 0 1rem;
+}
+
+/* Book title styling */
+.book-details h3 {
+  font-size: 0.875rem; /* Smaller font size for title */
+  font-weight: bold;
+  margin-bottom: 0.5rem; /* Add space below the title */
+}
+
+/* Action buttons (Add Review and Delete) */
+.book-details button {
+  margin-top: 0.3rem;
   padding: 0.3rem;
-  font-size: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.modal-actions button {
-  margin: 0.5rem;
-  padding: 0.5rem 1rem;
+  font-size: 0.75rem; /* Smaller buttons */
   border: none;
   border-radius: 4px;
   cursor: pointer;
 }
 
-.modal-actions button:first-child {
+.book-details button.add-review {
   background-color: #4caf50;
   color: white;
 }
 
-.modal-actions button:last-child {
+.book-details button:not(.add-review) {
   background-color: #f44336;
   color: white;
+}
+
+/* Responsive grid adjustments */
+@media (max-width: 768px) {
+  .main-content {
+    grid-template-columns: repeat(2, 1fr); /* 2 columns on smaller screens */
+  }
+}
+
+@media (max-width: 480px) {
+  .main-content {
+    grid-template-columns: 1fr; /* 1 column on very small screens */
+  }
 }

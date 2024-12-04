@@ -70,14 +70,21 @@ export const ADD_FRIEND = gql`
 `
 
 export const ADD_REVIEW = gql`
-  mutation AddReview($bookId: String!, $reviewInput: ReviewInput!) {
-    addReview(bookId: $bookId, reviewInput: $reviewInput) {
-      bookId
-      title
-      reviews {
-        userId
-        review
+  mutation addReview($bookId: String!, $reviewInput: ReviewInput!) {
+  addReview(bookId: $bookId, reviewInput: $reviewInput) {
+    bookId
+    reviews {
+      userId {
+        username
       }
+      review
+      rating
     }
+    title
+    image
+    description
+    authors
+    link
   }
+}
 `
