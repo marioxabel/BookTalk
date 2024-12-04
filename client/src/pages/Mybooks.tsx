@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
 import { GET_ME } from '../utils/queries';
+import type { Book } from '../models/Book';
 import { DELETE_BOOK, ADD_REVIEW } from '../utils/mutations';
 import Auth from '../utils/auth';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import './Mybooks.css';
 
 // Modal Component
@@ -66,7 +67,7 @@ const SavedBooks = () => {
   const [addReview] = useMutation(ADD_REVIEW);
   const [isModalOpen, setModalOpen] = useState(false);
   const [currentBook, setCurrentBook] = useState<string | null>(null);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const userData = data?.me;
 
@@ -129,7 +130,7 @@ const SavedBooks = () => {
 
       <main className="main-content">
         {userData?.savedBooks.length ? (
-          userData.savedBooks.map((book) => (
+          userData.savedBooks.map((book:Book) => (
             <div className="book-card" key={book.bookId}>
               <img src={book.image || '/default-book.png'} alt={`Cover for ${book.title}`} />
               <div className="book-details">
