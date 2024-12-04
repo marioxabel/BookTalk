@@ -8,14 +8,17 @@ import { GET_ME } from '../utils/queries';
 import type { Book } from '../models/Book';
 import type { GoogleAPIBook } from '../models/GoogleAPIBook';
 import './Mybooks.css'
-// import { useNavigate } from 'react-router-dom';
-// const navigate = useNavigate();
+import './Search.css'
+import { useNavigate } from 'react-router-dom';
+
+
 
 const SearchBooks = () => {
   const [searchedBooks, setSearchedBooks] = useState<Book[]>([]);
   const [searchInput, setSearchInput] = useState('');
   const [alertMessage, setAlertMessage] = useState('');
   const [showAlert, setShowAlert] = useState(false); 
+  const navigate = useNavigate();
 
   const [saveBook] = useMutation(SAVE_BOOK);
 
@@ -74,10 +77,11 @@ const SearchBooks = () => {
 
   return (
     <>
-        <div className="Search_bar">
+      {/* Search Bar */}
+      <div className="Search_bar">
         <h1>Hi {userData?.username}, what book are you looking for today?</h1>
         <Form onSubmit={handleFormSubmit}>
-          <Row >
+          <Row>
             <Col xs={12} md={8}>
               <Form.Control
                 name="searchInput"
@@ -90,20 +94,15 @@ const SearchBooks = () => {
               />
             </Col>
             <Col xs={12} md={4}>
-              <Button
-                type="submit"
-                className="Click_button"
-                size="lg"
-              >
+              <Button type="submit" className="Click_button" size="lg">
                 Search
               </Button>
             </Col>
           </Row>
         </Form>
       </div>
-
-
-
+  
+      {/* Book Results */}
       <Container>
         {showAlert && (
           <Toast
@@ -120,44 +119,49 @@ const SearchBooks = () => {
             <Toast.Body>{alertMessage}</Toast.Body>
           </Toast>
         )}
-
-        <Row>
+  
+        <Row className="g-4">
           {searchedBooks.map((book) => (
-            <Col md="4" key={book.bookId}>
-              <Card >
+            <Col lg="4" md="6" sm="12" key={book.bookId}>
+              <Card className="book-card">
                 {book.image && (
                   <Card.Img
                     src={book.image}
                     alt={`The cover for ${book.title}`}
-                    variant='top'
+                    variant="top"
+                    className="card-img-top"
                   />
                 )}
                 <Card.Body>
-  <Card.Title>{book.title}</Card.Title>
-  <p className='small'>Authors: {book.authors.join(', ')}</p>
-  <Card.Text>{book.description}</Card.Text>
-  {Auth.loggedIn() && (
-    <Row>
-      <Col xs={6}>
-        <Button
-          className='Click_button'
-          onClick={() => handleSaveBook(book.bookId)}
-          disabled={isBookSaved(book.bookId)}
-        >
-          {isBookSaved(book.bookId) ? 'Book Already Saved' : 'Save this Book!'}
-        </Button>
-      </Col>
-      <Col xs={6}>
-        {/* <Button
-          className='btn-block btn-secondary'
-          onClick={() => navigate(`/reviews/${book.bookId}`)}
-        >
-          View Reviews
-        </Button> */}
-      </Col>
-    </Row>
-  )}
-</Card.Body>
+                  <Card.Title>{book.title}</Card.Title>
+                  <p className="small">Authors: {book.authors.join(', ')}</p>
+                  <Card.Text>{book.description}</Card.Text>
+                  {Auth.loggedIn() && (
+                    <Row>
+                      <Col xs={6}>
+                        <Button
+                          className="Click_button w-100"
+                          onClick={() => handleSaveBook(book.bookId)}
+                          disabled={isBookSaved(book.bookId)}
+                        >
+                          {isBookSaved(book.bookId)
+                            ? 'Book Already Saved'
+                            : 'Save this Book!'}
+                        </Button>
+                      </Col>
+                      <Col xs={6}>
+                        <Button
+                          className="btn-block btn-secondary w-100"
+                          onClick={() =>
+                            navigate(`/books/${book.bookId}/reviews`)
+                          }
+                        >
+                          View Reviews
+                        </Button>
+                      </Col>
+                    </Row>
+                  )}
+                </Card.Body>
               </Card>
             </Col>
           ))}
@@ -165,6 +169,6 @@ const SearchBooks = () => {
       </Container>
     </>
   );
-};
+}  
 
 export default SearchBooks;

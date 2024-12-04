@@ -1,10 +1,12 @@
-import { useState, useEffect } from 'react';
+// import { useState, useEffect } from 'react';
 import { Container, Col, Row, Card } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import type { Review } from '../models/Book';
-import type { Book } from '../models/Book';
+// import type { Book } from '../models/Book';
 import { GET_BOOK } from '../utils/queries';
+
+
 
 
 
@@ -18,43 +20,10 @@ const ReviewPage = () => {
     if (loading) return <p>Loading ...</p>;
     if (error) return <p>Error: {error.message}</p>;
 
-    const { book } = data;
+    const book = data?.book || {};
 
-    // const [book, setBook] = useState<Book | null>(null);
-    // const [reviews, setReviews] = useState<Review[]>([]);
 
-    // useEffect(() => {
-    //     // Fetch the book details based on bookId
-    //     const fetchBook = async () => {
-    //         try {
-    //             const response = await fetch(`/api/books/${bookId}`);
-    //             if (!response.ok) {
-    //                 throw new Error('Failed to fetch book details');
-    //             }
-    //             const data: Book = await response.json();
-    //             setBook(data);
-    //         } catch (error) {
-    //             console.error('Error fetching book details:', error);
-    //         }
-    //     };
-
-    //     // Fetch the reviews for the book
-    //     const fetchReviews = async () => {
-    //         try {
-    //             const response = await fetch(`/api/books/${bookId}/reviews`);
-    //             if (!response.ok) {
-    //                 throw new Error('Failed to fetch reviews');
-    //             }
-    //             const data: Review[] = await response.json();
-    //             setReviews(data);
-    //         } catch (error) {
-    //             console.error('Error fetching reviews:', error);
-    //         }
-    //     };
-
-    //     fetchBook();
-    //     fetchReviews();
-    // }, [bookId]);
+    
 
     return (
         <>
@@ -68,7 +37,7 @@ const ReviewPage = () => {
             <Container className="mt-5">
                 <Row className="justify-content-center">
                     {book.reviews.length > 0 ? (
-                        book.reviews.map((review: any, index: number) => (
+                        book.reviews.map((review: Review, index: number) => (
                             <Col md={4} key={index} className="mb-4">
                                 <Card border="dark" className="h-100">
                                     <Card.Body>

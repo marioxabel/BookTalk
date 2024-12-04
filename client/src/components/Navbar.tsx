@@ -47,7 +47,7 @@ const AppNavbar = () => {
                   <Nav.Link as={Link} to="/" className="nav-item">
                     SEARCH
                   </Nav.Link>
-                  <Nav.Link as={Link} to="/myBooks" className="nav-item">
+                  <Nav.Link as={Link} to="/savedbooks" className="nav-item">
                     MY BOOKS
                   </Nav.Link>
                   <Nav.Link as={Link} to="/" className="nav-item">
