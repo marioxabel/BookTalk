@@ -178,10 +178,6 @@ const resolvers: IResolvers = {
 
 
 
-<<<<<<< HEAD
-
-=======
->>>>>>> cc7708a6035d9764e842690688a727c94099280c
     },
 };
 
