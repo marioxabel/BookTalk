@@ -1,3 +1,5 @@
+import type { User } from "./User";
+
 export interface Book {
   authors: string[],
   description: string;
@@ -9,9 +11,9 @@ export interface Book {
 }
 
 export interface Review {
-  username: string;
+  userId: User;
+  review: string
   rating: number;
-  text: string;
 }
 
   // Agregar propiedad de add reviews

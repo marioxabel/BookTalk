@@ -16,7 +16,7 @@ const StartPage = () => {
       if (isLoggedIn) {
         navigate("/searchbooks")
       }
-    }, []);
+    }, [isLoggedIn, navigate]);
   
     return (
         <div className="startpage">

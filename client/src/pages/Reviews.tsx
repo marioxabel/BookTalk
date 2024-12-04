@@ -2,9 +2,11 @@
 import { Container, Col, Row, Card } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
-// import type { Review } from '../models/Book';
+import type { Review } from '../models/Book';
 // import type { Book } from '../models/Book';
 import { GET_BOOK } from '../utils/queries';
+
+
 
 
 
@@ -68,7 +70,7 @@ const ReviewPage = () => {
             <Container className="mt-5">
                 <Row className="justify-content-center">
                     {book.reviews.length > 0 ? (
-                        book.reviews.map((review: any, index: number) => (
+                        book.reviews.map((review: Review, index: number) => (
                             <Col md={4} key={index} className="mb-4">
                                 <Card border="dark" className="h-100">
                                     <Card.Body>
