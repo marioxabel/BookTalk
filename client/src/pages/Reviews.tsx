@@ -1,14 +1,9 @@
-// import { useState, useEffect } from 'react';
 import { Container, Col, Row, Card } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import type { Review } from '../models/Book';
-// import type { Book } from '../models/Book';
 import { GET_BOOK } from '../utils/queries';
-
-
-
-
+import "./Reviews.css";
 
 const ReviewPage = () => {
     const { bookId } = useParams<{ bookId: string }>();
@@ -27,7 +22,7 @@ const ReviewPage = () => {
 
     return (
         <>
-            <div className="text-light bg-dark p-5 text-center">
+            <div className="text-light.bg-dark p-5 text-center">
                 <Container>
                     <h1>Reviews of {book ? `"${book.title}"` : 'Loading...'}</h1>
                     <p>{book ? `By ${book.authors}` : ''}</p>
@@ -53,7 +48,9 @@ const ReviewPage = () => {
                             </Col>
                         ))
                     ) : (
-                        <p>No reviews yet for this book.</p>
+                        <div className="no-review">
+                            <p>No reviews yet for this book.</p>
+                        </div>
                     )}
                 </Row>
             </Container>
