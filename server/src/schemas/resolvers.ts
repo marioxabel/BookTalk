@@ -64,7 +64,7 @@ const resolvers: IResolvers = {
             const existingUser = await User.findById(user._id);
             if (!existingUser) throw new AuthenticationError('User not found');
 
-            let existingBook = await Book.findOne({bookId: bookInput.bookId})
+            let existingBook = await Book.findOne({ bookId: bookInput.bookId })
             if (!existingBook) {
                 existingBook = await Book.create(bookInput)
             }
@@ -80,7 +80,7 @@ const resolvers: IResolvers = {
                 { new: true, runValidators: true }
             ).populate('savedBooks');
 
-            await existingBook.updateOne({ $addToSet: {users: user._id}})
+            await existingBook.updateOne({ $addToSet: { users: user._id } })
             await existingBook.save()
 
             if (!updatedUser) throw new Error('User not found');
@@ -92,18 +92,23 @@ const resolvers: IResolvers = {
             _: unknown,
             { bookId }: { bookId: string },
             { user }: { user: IUser }
-        ): Promise<IUser> => {
+        ): Promise<String> => {
             if (!user) throw new AuthenticationError('You must be logged in');
+            const currentBook = await Book.findOne({ bookId });
+            // console.log(currentBook);
 
             const updatedUser = await User.findByIdAndUpdate(
                 user._id,
-                { $pull: { savedBooks: { bookId } } },
+                { $pull: { savedBooks: currentBook?._id } },
                 { new: true }
             ).populate('savedBooks');
 
             if (!updatedUser) throw new Error('User not found');
 
-            return updatedUser;
+            currentBook?.updateOne({ $pull: { users: user._id } });
+            await currentBook?.save()
+
+            return `Book (bookId: ${bookId}, objectId: ${currentBook?._id}) has been removed`;
         },
 
         addFriend: async (
@@ -137,36 +142,44 @@ const resolvers: IResolvers = {
             _: unknown,
             { bookId, reviewInput }: { bookId: string; reviewInput: { review: string } },
             { user }: { user: IUser }
-          ): Promise<IBook> => {
+        ): Promise<IBook> => {
             if (!user) throw new AuthenticationError('You must be logged in');
-          
+
             try {
-              // Find the book by bookId in the user's savedBooks
-              console.log(user._id)
-              const book = await Book.findOne({ 
-                bookId, 
-                users: { $in: user._id}, 
-                'reviews.userId': { $nin: user._id} 
+                console.log(`User ID: ${user._id}, Book ID: ${bookId}`); // Debug User and Book IDs
+
+                const book = await Book.findOne({
+                    bookId,
+                    users: { $in: user._id },
                 });
-              console.log(book)
-              if (!book) throw new Error('Book not found in user\'s savedBooks');
-                
-              
-              // Add the review to the book's reviews array
-              book.reviews.push({ review: reviewInput.review, userId: user._id });
-          
-              // Save the updated user document
-              await book.save();
-          
-              return book; // Return the updated book
+
+                if (!book) {
+                    console.error(`Book with ID ${bookId} not found for user ${user._id}`);
+                    throw new Error(`Book not found in the user's savedBooks.`);
+                }
+
+                console.log('Found book:', book); // Debug the found book
+
+                // Add the review
+                book.reviews.push({
+                    review: reviewInput.review,
+                    userId: user._id,
+                });
+
+                // Save the book document
+                const updatedBook = await book.save();
+                console.log('Updated book with reviews:', updatedBook.reviews); // Debug updated reviews
+
+                return updatedBook; // Return the updated book
             } catch (err) {
-              console.error(`Error adding review for bookId ${bookId}:`, err);
-              throw new Error('Error adding review');
+                console.error(`Error in addReview resolver:`, err);
+                throw new Error('Error adding review');
             }
-          },
-          
-          
-          
+        },
+
+
+
+
     },
 };
 

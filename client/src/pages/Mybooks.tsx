@@ -1,25 +1,80 @@
+import React, { useState } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
-import { Container, Card, Button, Row, Col } from 'react-bootstrap';
 import { GET_ME } from '../utils/queries';
-import { DELETE_BOOK } from '../utils/mutations';
+import { DELETE_BOOK, ADD_REVIEW } from '../utils/mutations';
 import Auth from '../utils/auth';
-import type { User } from '../models/User';
+import { useNavigate } from 'react-router-dom';
+import './Mybooks.css';
+
+// Modal Component
+const AddReviewModal = ({
+  isOpen,
+  onClose,
+  onSave,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  onSave: (review: { text: string; rating: number }) => void;
+}) => {
+  const [review, setReview] = useState('');
+  const [rating, setRating] = useState<number>(1);
+
+  if (!isOpen) return null;
+
+  const handleSave = () => {
+    onSave({ text: review, rating });
+    setReview('');
+    setRating(1);
+    onClose();
+  };
+
+  return (
+    <div className="modal-overlay">
+      <div className="modal-content">
+        <h2>Add a Review</h2>
+        <textarea
+          value={review}
+          onChange={(e) => setReview(e.target.value)}
+          placeholder="Write your review here..."
+        ></textarea>
+        <div className="rating-input">
+          <label htmlFor="rating">Rating (1-5): </label>
+          <select
+            id="rating"
+            value={rating}
+            onChange={(e) => setRating(Number(e.target.value))}
+          >
+            {[1, 2, 3, 4, 5].map((num) => (
+              <option key={num} value={num}>
+                {num}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="modal-actions">
+          <button onClick={handleSave}>Save</button>
+          <button onClick={onClose}>Cancel</button>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const SavedBooks = () => {
   const { loading, error, data } = useQuery(GET_ME);
-  console.log("Data from GET_ME:", data);
   const [deleteBook] = useMutation(DELETE_BOOK);
+  const [addReview] = useMutation(ADD_REVIEW);
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [currentBook, setCurrentBook] = useState<string | null>(null);
+  const navigate = useNavigate();
 
-  // Verificamos que 'data' y 'data.me' están definidos antes de asignar a userData
-  const userData: User | undefined = data?.me;
+  const userData = data?.me;
 
   const handleDeleteBook = async (bookId: string) => {
     const token = Auth.loggedIn() ? Auth.getToken() : null;
 
-    if (!token) {
-      return false;
-    }
-    console.log("Deleting book with ID:", bookId);
+    if (!token) return false;
+
     try {
       await deleteBook({ variables: { bookId } });
     } catch (err) {
@@ -27,178 +82,79 @@ const SavedBooks = () => {
     }
   };
 
+  const openModal = (bookId: string) => {
+    setCurrentBook(bookId);
+    setModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
+    setCurrentBook(null);
+  };
+
+  const saveReview = async (review: { text: string; rating: number }) => {
+    if (!currentBook) {
+      console.error("No book selected for the review.");
+      return;
+    }
+
+    try {
+      const { data } = await addReview({
+        variables: {
+          bookId: currentBook,
+          reviewInput: {
+            review: review.text,
+            rating: review.rating,
+          },
+        },
+      });
+
+      console.log("Review saved successfully:", data);
+    } catch (error) {
+      console.error("Error saving review:", error);
+    } finally {
+      closeModal();
+    }
+  };
+
   if (loading) return <h2>Loading...</h2>;
   if (error) return <h2>Error: {error.message}</h2>;
 
   return (
-    <>
-      <div className='text-light bg-dark p-5'>
-        <Container>
-          <h1>Viewing {userData?.username}'s saved books!</h1>
-        </Container>
+    <div>
+      <div className="sidebar">
+        <h2>MY LIBRARY</h2>
+        <div className="decorative-line"></div>
       </div>
-      <Container>
-        <h2 className='pt-5'>
-          {userData?.savedBooks.length
-            ? `Viewing ${userData.savedBooks.length} saved ${userData.savedBooks.length === 1 ? 'book' : 'books'}:`
-            : 'You have no saved books!'}
-        </h2>
-        <Row>
-          {userData?.savedBooks.map((book) => (
-            <Col md='4' key={book.bookId}>
-              <Card border='dark'>
-                {book.image ? (
-                  <Card.Img src={book.image} alt={`The cover for ${book.title}`} variant='top' />
-                ) : null}
-                <Card.Body>
-                  <Card.Title>{book.title}</Card.Title>
-                  <p className='small'>Authors: {book.authors.join(', ')}</p>
-                  <Card.Text>{book.description}</Card.Text>
-                  <Button
-                    className='btn-block btn-danger'
-                    onClick={() => handleDeleteBook(book.bookId)}
-                  >
-                    Delete this Book!
-                  </Button>
-                </Card.Body>
-              </Card>
-            </Col>
-          ))}
-        </Row>
-      </Container>
-    </>
+
+      <main className="main-content">
+        {userData?.savedBooks.length ? (
+          userData.savedBooks.map((book) => (
+            <div className="book-card" key={book.bookId}>
+              <img src={book.image || '/default-book.png'} alt={`Cover for ${book.title}`} />
+              <div className="book-details">
+                <h3>{book.title}</h3>
+                <p>{book.description}</p>
+                <button className="add-review" onClick={() => openModal(book.bookId)}>
+                  Add Review
+                </button>
+                <button onClick={() => handleDeleteBook(book.bookId)}>Delete Book</button>
+              </div>
+            </div>
+          ))
+        ) : (
+          <h2>You have no saved books!</h2>
+        )}
+      </main>
+
+      {/* Add Review Modal */}
+      <AddReviewModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        onSave={saveReview}
+      />
+    </div>
   );
 };
 
 export default SavedBooks;
-
-
-
-
-
-// import { useState, useEffect } from 'react';
-// import { Container, Card, Button, Row, Col } from 'react-bootstrap';
-
-// import { getMe, deleteBook } from '../utils/mutations';
-// import Auth from '../utils/auth';
-// import { removeBookId } from '../utils/queries';
-// import type { User } from '../models/User';
-
-// const SavedBooks = () => {
-//   const [userData, setUserData] = useState<User>({
-//     username: '',
-//     email: '',
-//     password: '',
-//     savedBooks: [],
-//   });
-
-//   // use this to determine if `useEffect()` hook needs to run again
-//   const userDataLength = Object.keys(userData).length;
-
-//   useEffect(() => {
-//     const getUserData = async () => {
-//       try {
-//         const token = Auth.loggedIn() ? Auth.getToken() : null;
-
-//         if (!token) {
-//           return false;
-//         }
-
-//         const response = await getMe(token);
-
-//         if (!response.ok) {
-//           throw new Error('something went wrong!');
-//         }
-
-//         const user = await response.json();
-//         setUserData(user);
-//       } catch (err) {
-//         console.error(err);
-//       }
-//     };
-
-//     getUserData();
-//   }, [userDataLength]);
-
-//   // create function that accepts the book's mongo _id value as param and deletes the book from the database
-//   const handleDeleteBook = async (bookId: string) => {
-//     const token = Auth.loggedIn() ? Auth.getToken() : null;
-
-//     if (!token) {
-//       return false;
-//     }
-
-//     try {
-//       const response = await deleteBook(bookId, token);
-
-//       if (!response.ok) {
-//         throw new Error('something went wrong!');
-//       }
-
-//       const updatedUser = await response.json();
-//       setUserData(updatedUser);
-//       // upon success, remove book's id from localStorage
-//       removeBookId(bookId);
-//     } catch (err) {
-//       console.error(err);
-//     }
-//   };
-
-//   // if data isn't here yet, say so
-//   if (!userDataLength) {
-//     return <h2>LOADING...</h2>;
-//   }
-
-//   return (
-//     <>
-//       <div className='text-light bg-dark p-5'>
-//         <Container>
-//           {userData.username ? (
-//             <h1>Viewing {userData.username}'s saved books!</h1>
-//           ) : (
-//             <h1>Viewing saved books!</h1>
-//           )}
-//         </Container>
-//       </div>
-//       <Container>
-//         <h2 className='pt-5'>
-//           {userData.savedBooks.length
-//             ? `Viewing ${userData.savedBooks.length} saved ${
-//                 userData.savedBooks.length === 1 ? 'book' : 'books'
-//               }:`
-//             : 'You have no saved books!'}
-//         </h2>
-//         <Row>
-//           {userData.savedBooks.map((book) => {
-//             return (
-//               <Col md='4'>
-//                 <Card key={book.bookId} border='dark'>
-//                   {book.image ? (
-//                     <Card.Img
-//                       src={book.image}
-//                       alt={`The cover for ${book.title}`}
-//                       variant='top'
-//                     />
-//                   ) : null}
-//                   <Card.Body>
-//                     <Card.Title>{book.title}</Card.Title>
-//                     <p className='small'>Authors: {book.authors}</p>
-//                     <Card.Text>{book.description}</Card.Text>
-//                     <Button
-//                       className='btn-block btn-danger'
-//                       onClick={() => handleDeleteBook(book.bookId)}
-//                     >
-//                       Delete this Book!
-//                     </Button>
-//                   </Card.Body>
-//                 </Card>
-//               </Col>
-//             );
-//           })}
-//         </Row>
-//       </Container>
-//     </>
-//   );
-// };
-
-// export default SavedBooks;

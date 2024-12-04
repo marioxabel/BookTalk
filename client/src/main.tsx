@@ -34,6 +34,10 @@ const router = createBrowserRouter([
       {
         path: '/searchbooks',
         element: <SearchBooks />
+      },
+      {
+        path: '/Mybooks',
+        element: <SavedBooks />
       }
     ]
   }

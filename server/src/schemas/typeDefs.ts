@@ -36,7 +36,7 @@ const typeDefs = `
     createUser(username: String!, email: String!, password: String!): AuthPayload
     login(email: String!, password: String!): AuthPayload
     saveBook(bookInput: BookInput!): User
-    deleteBook(bookId: String!): User
+    deleteBook(bookId: String!): String
     addFriend(friend_id: String!): User
     addReview(bookId: String!, reviewInput: ReviewInput!): Book # Add the addReview mutation
   }
