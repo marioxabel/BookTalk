@@ -12,7 +12,8 @@
     "start:dev": "concurrently \"cd server && npm run watch\" \"cd client && npm run dev\"",
     "install": "cd server && npm i && cd ../client && npm i",
     "build": "cd server && npm run build && cd ../client && npm run build",
-    "render-build": "npm install && npm run build"
+    "render-build": "npm install && npm run build",
+    "lint": "cd client && npm run lint"
   },
   "keywords": [],
   "author": "",
@@ -22,6 +23,9 @@
     "@types/dotenv": "^8.2.3",
     "@types/jsonwebtoken": "^9.0.7",
     "concurrently": "^8.2.0",
+    "eslint": "^9.16.0",
+    "eslint-plugin-react-hooks": "^5.0.0",
+    "eslint-plugin-react-refresh": "^0.4.16",
     "nodemon": "^3.1.7",
     "wait-on": "^8.0.1"
   },
