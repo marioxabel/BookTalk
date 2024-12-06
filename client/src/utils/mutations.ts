@@ -47,17 +47,9 @@ export const SAVE_BOOK = gql`
 
 
 export const DELETE_BOOK = gql`
-  mutation deleteBook($bookId: String!) {
-    deleteBook(bookId: $bookId) {
-      id
-      username
-      email
-      savedBooks {
-        bookId
-        title
-      }
-    }
-  }
+ mutation DeleteBook($bookId: String!) {
+  deleteBook(bookId: $bookId)
+}
 `;
 
 // Agregar la mutation de add reviews
@@ -78,14 +70,21 @@ export const ADD_FRIEND = gql`
 `
 
 export const ADD_REVIEW = gql`
-  mutation AddReview($bookId: String!, $reviewInput: ReviewInput!) {
-    addReview(bookId: $bookId, reviewInput: $reviewInput) {
-      bookId
-      title
-      reviews {
-        userId
-        review
+  mutation addReview($bookId: String!, $reviewInput: ReviewInput!) {
+  addReview(bookId: $bookId, reviewInput: $reviewInput) {
+    bookId
+    reviews {
+      userId {
+        username
       }
+      review
+      rating
     }
+    title
+    image
+    description
+    authors
+    link
   }
+}
 `

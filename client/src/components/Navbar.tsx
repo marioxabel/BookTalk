@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
-import { Link , useLocation} from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Navbar, Nav, Container, Modal, Tab } from 'react-bootstrap';
 import SignUpForm from './SignupForm';
 import LoginForm from './LoginForm';
 import Auth from '../utils/auth';
-import './navbar.css'
+import './navbar.css';
 
 const AppNavbar = () => {
   const [showModal, setShowModal] = useState(false);
@@ -34,7 +34,7 @@ const AppNavbar = () => {
 
   return (
     <>
-     <Navbar expand="lg" className="custom-navbar">
+      <Navbar expand="lg" className="custom-navbar">
         <Container>
           <Navbar.Brand as={Link} to="/" className="brand-text">
             BookTalk
@@ -42,20 +42,15 @@ const AppNavbar = () => {
           {!isLandingPage && isLoggedIn && (
             <>
               <Navbar.Toggle aria-controls="navbar" />
-              <Navbar.Collapse id="navbar">
+              <Navbar.Collapse id="navbar" role="navigation">
                 <Nav className="ml-auto">
                   <Nav.Link as={Link} to="/" className="nav-item">
                     SEARCH
                   </Nav.Link>
-                  <Nav.Link as={Link} to="/savedbooks" className="nav-item">
+                  <Nav.Link as={Link} to="/saved" className="nav-item">
                     MY BOOKS
                   </Nav.Link>
-                  <Nav.Link as={Link} to="/" className="nav-item">
-                    REVIEWS
-                  </Nav.Link>
-                  <Nav.Link as={Link} to="/" className="nav-item">
-                    PROFILE
-                  </Nav.Link>
+
                   {isLoggedIn ? (
                     <Nav.Link onClick={handleLogout} className="nav-item">
                       LOGOUT
@@ -118,8 +113,3 @@ const AppNavbar = () => {
 };
 
 export default AppNavbar;
-
-
-
-
-

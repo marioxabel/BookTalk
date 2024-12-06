@@ -7,7 +7,6 @@ import type { User } from '../models/User';
 import { GET_ME } from '../utils/queries';
 import type { Book } from '../models/Book';
 import type { GoogleAPIBook } from '../models/GoogleAPIBook';
-import './Mybooks.css'
 import './Search.css'
 import { useNavigate } from 'react-router-dom';
 

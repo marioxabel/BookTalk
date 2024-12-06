@@ -5,19 +5,38 @@
     flex-direction: column; /* Stack buttons vertically */
     height: 100vh; /* Full viewport height */
     position: relative; /* Set relative positioning for title placement */
+    padding: 20px;
+    text-align: center;
+    
     
     
 }
 
 .startpage h1 {
     color: #322203;
-    margin-bottom: 50px; 
+    margin-bottom: 30px; 
     right: 0; 
+    font-size: 2.5rem; 
+    font-family: 'Georgia', 
     /* margin: 20px;  */
     
 }
 
 .startpage button {
-    margin: 10px; /* Add spacing between buttons */
-    width: 40%;
-}
+    margin: 15px 0; /* Espaciado más uniforme */
+    padding: 12px 20px;
+    font-size: 1.1rem; /* Tamaño de texto más grande */
+    width: 200px; /* Botones más consistentes */
+    border: 2px solid #322203;
+    color: #322203;
+    background: transparent;
+    border-radius: 8px;
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .startpage button:hover {
+    background: #322203;
+    color: #ffffff;
+    transform: translateY(-3px); /* Efecto de elevación */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  }
