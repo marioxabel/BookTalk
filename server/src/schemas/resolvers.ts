@@ -22,10 +22,54 @@ const resolvers: IResolvers = {
                 throw new Error('Error fetching user');
             }
         },
-        book: async(_: any, { bookId }: { bookId: string}) => {
-            const currentBook = await Book.findOne({bookId}).populate("reviews.userId");
-            console.log(currentBook)
-            return currentBook
+        book: async (_: any, { bookId }: { bookId: string }) => {
+            try {
+                // 1. Check if book is in data base
+                let currentBook = await Book.findOne({ bookId }).populate('reviews.userId');
+
+                if (currentBook) {
+                    console.log('Book found in database', currentBook);
+                    return currentBook;
+                }
+
+                // 2. API call to Google Books.
+                console.log(`Book with ID ${bookId} not found in database. Doing api call.`);
+                const response = await fetch(`https://www.googleapis.com/books/v1/volumes/${bookId}`);
+
+                if (!response.ok) {
+                    console.error('Error retrieving data', response.statusText);
+                    throw new Error('Error fetching data ');
+                }
+
+                const bookData = await response.json();
+
+                // 3. Verify data 
+                if (!bookData || !bookData.volumeInfo) {
+                    console.error('Invalid Data', bookData);
+                    throw new Error('Invalid book data from Google Books API');
+                }
+
+                const volumeInfo = bookData.volumeInfo;
+
+                // 4. Send book data to database
+                const newBook = await Book.create({
+                    bookId,
+                    title: volumeInfo.title,
+                    authors: volumeInfo.authors || [],
+                    description: volumeInfo.description || '',
+                    image: volumeInfo.imageLinks?.thumbnail || '',
+                    link: volumeInfo.infoLink || '',
+                    reviews: [], 
+                });
+
+                console.log('Book saved', newBook);
+
+                // 5. Retornar el libro recién creado.
+                return newBook;
+            } catch (error) {
+                console.error('Error resolving the book:', error);
+                throw new Error('Error fetching book data');
+            }
         },
     },
     Mutation: {
